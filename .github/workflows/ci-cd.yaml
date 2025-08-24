@@ -23,7 +23,7 @@ jobs:
 
       - name: Build & Push Backend
         run: |
-          docker build -t dokkaushik/dotnet-app-4:${{ github.sha }} -f dotnet-app-4/Dockerfile ./dotnet-app-3
+          docker build -t dokkaushik/dotnet-app-4:${{ github.sha }} -f dotnet-app-4/Dockerfile ./dotnet-app-4
           docker push dokkaushik/dotnet-app-4:${{ github.sha }}
 
       - name: Build & Push Frontend
