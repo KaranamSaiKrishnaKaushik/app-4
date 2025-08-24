@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-4
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/KaranamSaiKrishnaKaushik/app-4.git'
+    targetRevision: main
+    path: k8s  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app-4
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

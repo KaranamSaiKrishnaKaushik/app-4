@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+  namespace: app-4-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: angular-app-4
+  template:
+    metadata:
+      labels:
+        app: angular-app-4
+    spec:
+      containers:
+        - name: angular-app-4
+          image: dokkaushik/angular-app-4:latest
+          ports:
+            - containerPort: 80

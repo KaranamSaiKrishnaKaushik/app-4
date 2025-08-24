@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: app-4-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dotnet-app-4
+  template:
+    metadata:
+      labels:
+        app: dotnet-app-4
+    spec:
+      containers:
+        - name: dotnet-app-4
+          image: dokkaushik/dotnet-app-4:latest
+          ports:
+            - containerPort: 5000

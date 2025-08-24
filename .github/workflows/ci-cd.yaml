@@ -1,0 +1,46 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+# Grant write permission for repo contents so the workflow can push commits
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repo with the proper token for pushing changes
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Build & Push Backend
+        run: |
+          docker build -t dokkaushik/dotnet-app-4:${{ github.sha }} -f dotnet-app-4/Dockerfile ./dotnet-app-3
+          docker push dokkaushik/dotnet-app-4:${{ github.sha }}
+
+      - name: Build & Push Frontend
+        run: |
+          docker build -t dokkaushik/angular-app-4:${{ github.sha }} -f angular-app-4/Dockerfile ./angular-app-4
+          docker push dokkaushik/angular-app-4:${{ github.sha }}
+
+      - name: Update manifests
+        run: |
+          sed -i "s|image: .*dotnet-app-4:.*|image: dokkaushik/dotnet-app-4:${{ github.sha }}|" k8s/api-deployment.yaml
+          sed -i "s|image: .*angular-app-4:.*|image: dokkaushik/angular-app-4:${{ github.sha }}|" k8s/web-deployment.yaml
+
+
+      - name: Commit & Push manifests
+        run: |
+          git config --global user.email "karanamsaikrishna.kaushik@gmail.com"
+          git config --global user.name "KaranamSaiKrishnaKaushik"
+          git add k8s/api-deployment.yaml k8s/web-deployment.yaml
+          git commit -m "update images to ${{ github.sha }}" || echo "No changes to commit"
+          git push
