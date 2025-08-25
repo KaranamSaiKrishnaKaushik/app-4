@@ -1,3 +1,3 @@
 export const environment = {
-    apiUrl: 'http://backend:80' //'http://localhost:5000/'
+    apiUrl: 'http://api.app-4.local/' //'http://backend:80' //'http://localhost:5000/'
 }
