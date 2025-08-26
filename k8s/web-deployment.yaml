@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: angular-app-4
-          image: dokkaushik/angular-app-4:b7e1c793d97aba77054e148d3ffd2e3cc79be420
+          image: dokkaushik/angular-app-4:1f7a3bfd76d18fe2875800b6d092090d5b42392c
           ports:
             - containerPort: 80
