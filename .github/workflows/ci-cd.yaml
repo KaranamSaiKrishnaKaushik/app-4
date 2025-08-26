@@ -4,7 +4,6 @@ on:
   push:
     branches: [ main ]
 
-# Grant write permission for repo contents so the workflow can push commits
 permissions:
   contents: write
 
@@ -13,30 +12,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repo with the proper token for pushing changes
+      # Checkout the repo
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Cache npm to avoid hitting rate limits
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # DockerHub login
       - name: Log in to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
+      # Build & Push Backend
       - name: Build & Push Backend
         run: |
-          docker build -t dokkaushik/dotnet-app-4:${{ github.sha }} -f dotnet-app-4/Dockerfile ./dotnet-app-4
+          docker build \
+            -t dokkaushik/dotnet-app-4:${{ github.sha }} \
+            -f dotnet-app-4/Dockerfile ./dotnet-app-4
           docker push dokkaushik/dotnet-app-4:${{ github.sha }}
 
+      # Build & Push Frontend
       - name: Build & Push Frontend
         run: |
-          docker build -t dokkaushik/angular-app-4:${{ github.sha }} -f angular-app-4/Dockerfile ./angular-app-4
+          docker build \
+            -t dokkaushik/angular-app-4:${{ github.sha }} \
+            -f angular-app-4/Dockerfile ./angular-app-4
           docker push dokkaushik/angular-app-4:${{ github.sha }}
 
+      # Update manifests with new image tags
       - name: Update manifests
         run: |
           sed -i "s|image: .*dotnet-app-4:.*|image: dokkaushik/dotnet-app-4:${{ github.sha }}|" k8s/api-deployment.yaml
           sed -i "s|image: .*angular-app-4:.*|image: dokkaushik/angular-app-4:${{ github.sha }}|" k8s/web-deployment.yaml
 
-
+      # Commit & Push updated manifests
       - name: Commit & Push manifests
         run: |
           git config --global user.email "karanamsaikrishna.kaushik@gmail.com"
