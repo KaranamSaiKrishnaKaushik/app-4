@@ -5,7 +5,7 @@ metadata:
   namespace: app-4-dev
 spec:
   selector:
-    app: dotnet-app-4
+    app: api #dotnet-app-4
   ports:
     - protocol: TCP
       port: 80
