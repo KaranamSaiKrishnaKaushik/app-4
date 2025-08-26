@@ -30,21 +30,28 @@ jobs:
       - name: Log in to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-      # Build & Push Backend
+      # Set up Docker Buildx for multi-arch builds
+      - name: Set up Docker Buildx
+        run: |
+          docker buildx create --use
+
+      # Build & Push Backend (multi-arch)
       - name: Build & Push Backend
         run: |
-          docker build \
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
             -t dokkaushik/dotnet-app-4:${{ github.sha }} \
-            -f dotnet-app-4/Dockerfile ./dotnet-app-4
-          docker push dokkaushik/dotnet-app-4:${{ github.sha }}
+            -f dotnet-app-4/Dockerfile \
+            --push ./dotnet-app-4
 
-      # Build & Push Frontend
+      # Build & Push Frontend (multi-arch)
       - name: Build & Push Frontend
         run: |
-          docker build \
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
             -t dokkaushik/angular-app-4:${{ github.sha }} \
-            -f angular-app-4/Dockerfile ./angular-app-4
-          docker push dokkaushik/angular-app-4:${{ github.sha }}
+            -f angular-app-4/Dockerfile \
+            --push ./angular-app-4
 
       # Update manifests with new image tags
       - name: Update manifests
