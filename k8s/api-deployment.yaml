@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: dotnet-app-4
-          image: dokkaushik/dotnet-app-4:2d9464663cb20a12188b835ff2140d54801f3125
+          image: dokkaushik/dotnet-app-4:6f1ef5d4d3d8d3609cf28165d3e973e23edcf40c
           ports:
             - containerPort: 5000
