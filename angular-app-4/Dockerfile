@@ -9,7 +9,7 @@ RUN npm ci --retry=5 --fetch-retries=5 --fetch-retry-factor=2 \
 
 # Copy source and build Angular
 COPY . .
-RUN npm run build angular-app-4 -- --configuration production
+RUN npm run build -- angular-app-4 --configuration production
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
