@@ -26,6 +26,7 @@ public class Program
             });
         });
         var app = builder.Build();
+        app.UseRouting(); 
         app.UseCors("AllowAll");
         app.MapControllers();
 
