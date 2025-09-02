@@ -4,6 +4,7 @@ metadata:
   name: api-deployment
   namespace: app-4-dev
 spec:
+  revisionHistoryLimit: 1
   replicas: 1
   selector:
     matchLabels:
@@ -18,3 +19,7 @@ spec:
           image: dokkaushik/dotnet-app-4:b35262fff3bc83024e94abed49a6212bf467d702
           ports:
             - containerPort: 5000
+          env:
+            # Helpful in k8s behind proxies; not strictly required
+            - name: ASPNETCORE_URLS
+              value: http://+:5000

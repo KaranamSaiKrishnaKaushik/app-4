@@ -25,6 +25,8 @@ COPY --from=publish /app/publish .
 # Ensure the app listens on all network interfaces
 ENV ASPNETCORE_URLS=http://+:5000
 
+EXPOSE 5000
+
 # Optional non-root user
 # RUN adduser --disabled-password --gecos "" appuser && chown -R appuser /app
 # USER appuser
