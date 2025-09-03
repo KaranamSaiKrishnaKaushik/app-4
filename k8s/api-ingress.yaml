@@ -4,6 +4,7 @@ metadata:
   name: api-ingress
   namespace: app-4-dev
 spec:
+  ingressClassName: nginx
   rules:
     - host: api.138.2.131.203.nip.io
       http:
@@ -14,4 +15,4 @@ spec:
               service:
                 name: api-service
                 port:
-                  name: http
+                  number: 80

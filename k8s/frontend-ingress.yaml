@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: frontend-ingress
   namespace: app-4-dev
-  annotations:
-    kubernetes.io/ingress.class: nginx
 spec:
   ingressClassName: nginx
   rules:
