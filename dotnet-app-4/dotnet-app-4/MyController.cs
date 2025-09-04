@@ -4,7 +4,7 @@ using GherkinHome.Services;
 namespace DotnetApp4
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class MyController : ControllerBase
     {
         private readonly IMyService _service;
